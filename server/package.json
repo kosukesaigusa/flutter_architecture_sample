@@ -1,0 +1,48 @@
+{
+  "name": "architecture-sample-app-server",
+  "scripts": {
+    "lint": "biome lint --write",
+    "format": "biome format --write",
+    "check": "biome check --write",
+    "dev": "wrangler dev",
+    "test": "vitest",
+    "test:ci": "vitest run",
+    "coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui --coverage.enabled=true",
+    "deploy": "wrangler deploy",
+    "db:studio": "drizzle-kit studio --config drizzle.config.ts",
+    "migration:generate": "yes | drizzle-kit generate --config=drizzle.config.ts",
+    "migration:apply": "yes | wrangler d1 migrations apply architecture-sample-app-server --local",
+    "migration:apply:remote": "yes | wrangler d1 migrations apply architecture-sample-app-server --remote",
+    "db:reset:local": "rm -rf .wrangler && bun run migration:apply",
+    "db:seed:local": "bun run db:reset:local && bun src/util/test-util/db/seed.ts"
+  },
+  "dependencies": {
+    "@hono/firebase-auth": "^1.4.2",
+    "@scalar/hono-api-reference": "^0.9.7",
+    "better-sqlite3": "^12.1.1",
+    "drizzle-orm": "^0.44.2",
+    "drizzle-zod": "^0.8.2",
+    "hono": "^4.8.3",
+    "hono-openapi": "^0.4.8",
+    "neverthrow": "^8.2.0",
+    "pino": "^9.7.0",
+    "ts-pattern": "^5.7.1",
+    "ulidx": "^2.4.1",
+    "vitest": "^3.2.4",
+    "zod": "^3.25.67",
+    "zod-openapi": "^4.2.4"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@cloudflare/vitest-pool-workers": "^0.8.47",
+    "@cloudflare/workers-types": "^4.20250628.0",
+    "@hono/zod-validator": "^0.7.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/bun": "latest",
+    "@vitest/coverage-istanbul": "^3.2.4",
+    "drizzle-kit": "^0.31.4",
+    "miniflare": "^4.20250617.4",
+    "wrangler": "^4.22.0"
+  }
+}

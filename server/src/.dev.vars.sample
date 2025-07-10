@@ -1,0 +1,4 @@
+FIREBASE_PRIVATE_KEY_ID=your-private-key-id
+FIREBASE_PRIVATE_KEY="your-private-key"
+FIREBASE_CLIENT_EMAIL=your-client-email
+FIREBASE_CLIENT_ID=your-client-id
