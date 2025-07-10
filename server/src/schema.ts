@@ -54,7 +54,9 @@ export const todos = sqliteTable(
     todoId: text('todo_id').primaryKey(),
     title: text('title').notNull(),
     description: text('description').notNull(),
-    userId: text('user_id').notNull().references(() => users.userId, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'cascade' }),
     createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
     updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
   },

@@ -51,7 +51,8 @@ export const TODO_DATA = [
   {
     todoId: ulid(),
     title: '友達と映画を見る',
-    description: '来週の日曜日に友達と新作映画を見る約束をしているので、チケットを予約する。',
+    description:
+      '来週の日曜日に友達と新作映画を見る約束をしているので、チケットを予約する。',
     userId: DEFAULT_USER_IDS.USER_2,
     createdAt: new Date('2024-01-06T08:30:00Z').toISOString(),
     updatedAt: new Date('2024-01-06T08:30:00Z').toISOString(),

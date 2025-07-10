@@ -6,7 +6,7 @@ import {
   getTestClient,
   getTestDrizzleClient,
 } from '../../../util/test-util/testClient'
-import { ZodValidationErrorResponse } from '../../../util/test-util/zodValidationErrorResponse'
+import type { ZodValidationErrorResponse } from '../../../util/test-util/zodValidationErrorResponse'
 
 describe('Test for POST /api/todos', () => {
   // 前提：認証済みユーザーが有効なデータで Todo を作成する。
@@ -67,7 +67,7 @@ describe('Test for POST /api/todos', () => {
     // 必須フィールドが不足した Todo を作成する。
     const res = await client.api.todos.$post({
       json: {
-        title: '',  // 空文字
+        title: '', // 空文字
         description: 'テスト用のタスクです',
       },
     })
@@ -138,4 +138,4 @@ describe('Test for POST /api/todos', () => {
     expect(errorResponse.success).toBe(false)
     expect(errorResponse.error.name).toBe('ZodError')
   })
-}) 
+})

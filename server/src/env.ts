@@ -1,6 +1,6 @@
 import type { D1Database } from '@cloudflare/workers-types'
-import { AppLogger } from './util/logger'
-import { DrizzleD1Database } from 'drizzle-orm/d1'
+import type { DrizzleD1Database } from 'drizzle-orm/d1'
+import type { AppLogger } from './util/logger'
 
 /**
  * 環境変数の型定義。

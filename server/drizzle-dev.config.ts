@@ -9,7 +9,7 @@ export default {
   dialect: 'sqlite',
   dbCredentials: {
     accountId: '4f29a10957e4205c8c867e6b0f4fc924',
-    databaseId: '6143de06-800d-4e5f-a117-1ffd114ddc1d',
+    databaseId: 'c170714c-a73c-40d9-9564-db5f507fccee',
     token: '',
   },
-} satisfies Config
+} satisfies Config 

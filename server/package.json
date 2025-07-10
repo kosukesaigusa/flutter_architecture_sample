@@ -1,5 +1,5 @@
 {
-  "name": "architecture-sample-app-server",
+  "name": "architecture-sample-app",
   "scripts": {
     "lint": "biome lint --write",
     "format": "biome format --write",
@@ -9,18 +9,26 @@
     "test:ci": "vitest run",
     "coverage": "vitest run --coverage",
     "test:ui": "vitest --ui --coverage.enabled=true",
-    "deploy": "wrangler deploy",
+    "deploy": "wrangler deploy --env prod",
+    "deploy:dev": "wrangler deploy --env dev",
     "db:studio": "drizzle-kit studio --config drizzle.config.ts",
+    "db:studio:dev": "drizzle-kit studio --config drizzle-dev.config.ts",
     "migration:generate": "yes | drizzle-kit generate --config=drizzle.config.ts",
-    "migration:apply": "yes | wrangler d1 migrations apply architecture-sample-app-server --local",
-    "migration:apply:remote": "yes | wrangler d1 migrations apply architecture-sample-app-server --remote",
+    "migration:generate:dev": "yes | drizzle-kit generate --config=drizzle-dev.config.ts",
+    "migration:apply": "yes | wrangler d1 migrations apply architecture-sample-app --local",
+    "migration:apply:remote": "yes | wrangler d1 migrations apply architecture-sample-app --remote",
+    "migration:apply:dev": "yes | wrangler d1 migrations apply architecture-sample-app-dev --local --env dev",
+    "migration:apply:remote:dev": "yes | wrangler d1 migrations apply architecture-sample-app-dev --remote --env dev",
     "db:reset:local": "rm -rf .wrangler && bun run migration:apply",
-    "db:seed:local": "bun run db:reset:local && bun src/util/test-util/db/seed.ts"
+    "db:reset:local:dev": "rm -rf .wrangler && bun run migration:apply:dev",
+    "db:seed:local": "bun run db:reset:local && bun src/util/test-util/db/seed.ts",
+    "db:seed:local:dev": "bun run db:reset:local:dev && bun src/util/test-util/db/seed.ts"
   },
   "dependencies": {
     "@hono/firebase-auth": "^1.4.2",
     "@scalar/hono-api-reference": "^0.9.7",
-    "better-sqlite3": "^12.1.1",
+    "better-sqlite3": "^12.2.0",
+    "drizzle-seed": "^0.3.1",
     "drizzle-orm": "^0.44.2",
     "drizzle-zod": "^0.8.2",
     "hono": "^4.8.3",
@@ -30,7 +38,7 @@
     "ts-pattern": "^5.7.1",
     "ulidx": "^2.4.1",
     "vitest": "^3.2.4",
-    "zod": "^3.25.67",
+    "zod": "^3.25.76",
     "zod-openapi": "^4.2.4"
   },
   "devDependencies": {

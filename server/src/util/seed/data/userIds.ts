@@ -74,7 +74,7 @@ export const getUserId = (param: GetUserIdParam): string => {
  * Firebase Authentication のユーザーと 1:1 で紐づく。
  */
 export const USER_SEED_DATA: Array<typeof schema.users.$inferInsert> = [
-  {userId: DEFAULT_USER_IDS.USER_1},
-  {userId: DEFAULT_USER_IDS.USER_2},
-  {userId: DEFAULT_USER_IDS.USER_3},
+  { userId: DEFAULT_USER_IDS.USER_1 },
+  { userId: DEFAULT_USER_IDS.USER_2 },
+  { userId: DEFAULT_USER_IDS.USER_3 },
 ]

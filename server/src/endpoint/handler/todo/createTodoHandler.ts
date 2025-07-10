@@ -4,10 +4,13 @@ import { describeRoute } from 'hono-openapi'
 import { resolver, validator } from 'hono-openapi/zod'
 import { createFactory } from 'hono/factory'
 import { match } from 'ts-pattern'
-import { AppHTTPException, getErrorResponseForOpenAPISpec } from '../../errorResponse'
 import type { EnvironmentVariables } from '../../../env'
 import { createTodoUseCase } from '../../../use-case/todo/createTodoUseCase'
 import { ENDPOINT_ERROR_CODES } from '../../errorCode'
+import {
+  AppHTTPException,
+  getErrorResponseForOpenAPISpec,
+} from '../../errorResponse'
 
 /** リクエストボディのスキーマ。 */
 const requestSchema = z
@@ -43,10 +46,10 @@ const responseSchema = z
 
 /**
  * Todo を作成する Handler.
- * 
+ *
  * @returns 作成された Todo の情報を返却する。
  */
-export const createTodoHandlers = 
+export const createTodoHandlers =
   createFactory<EnvironmentVariables>().createHandlers(
     describeRoute({
       description: 'Todo を作成する',
@@ -70,32 +73,36 @@ export const createTodoHandlers =
 
       // バリデーション済みのリクエストボディを取得する。
       const data = c.req.valid('json')
-      
+
       // UseCase を呼び出す。
       const result = await createTodoUseCase({
         userId,
         title: data.title,
         description: data.description,
       })
-      
+
       // エラーが発生した場合は、エラーの種類を網羅的にマッチングし、
       // 対応するエラーコード AppHTTPException に設定してスローする。
       if (result.isErr()) {
         const error = result.error
         match(error)
           .with({ type: 'TODO_CREATE_FAILED' }, () => {
-            throw new AppHTTPException(ENDPOINT_ERROR_CODES.CREATE_TODO.FAILED.code)
+            throw new AppHTTPException(
+              ENDPOINT_ERROR_CODES.CREATE_TODO.FAILED.code,
+            )
           })
           .with({ type: 'TODO_VALIDATION_ERROR' }, () => {
-            throw new AppHTTPException(ENDPOINT_ERROR_CODES.CREATE_TODO.VALIDATION_ERROR.code)
+            throw new AppHTTPException(
+              ENDPOINT_ERROR_CODES.CREATE_TODO.VALIDATION_ERROR.code,
+            )
           })
           .exhaustive()
         return
       }
-      
+
       // レスポンスデータをバリデーションする。
       const validatedResponse = responseSchema.parse(result.value)
-      
+
       // レスポンスを生成する。
       return c.json(validatedResponse, 201)
     },

@@ -1,6 +1,6 @@
 import * as schema from '../../schema'
-import { USER_SEED_DATA, getUserId } from "./data/userIds"
-import { DatabaseForSeed } from "./databaseForSeed"
+import { USER_SEED_DATA, getUserId } from './data/userIds'
+import type { DatabaseForSeed } from './databaseForSeed'
 
 /**
  * ユーザーデータをシードするためのパラメータ。

@@ -1,31 +1,31 @@
-import type { ErrorHandler } from 'hono'
-import { HTTPException } from 'hono/http-exception'
+import type { Context } from 'hono'
 import type { EnvironmentVariables } from '../../env'
+import { AppHTTPException } from '../errorResponse'
 
 /**
- * グローバルエラーハンドラーミドルウェア。
- *
- * アプリケーション全体で発生したエラーを統一的に処理する。
+ * グローバルなエラーハンドリングを行う ミドルウェア。
+ * @param error 発生したエラー。
+ * @param c コンテキスト。
+ * @returns レスポンス。
  */
-export const globalErrorHandlerMiddleware: ErrorHandler<
-  EnvironmentVariables
-> = (err, c) => {
+export const globalErrorHandlerMiddleware = async (
+  error: Error,
+  c: Context<EnvironmentVariables>,
+) => {
   const logger = c.get('logger')
 
-  // HTTPException の場合はそのままレスポンスを返す。
-  if (err instanceof HTTPException) {
-    logger.warn(`HTTP Exception: ${err.message}`)
-    return err.getResponse()
+  // AppHTTPException の場合は、エラーコードを含む 400 レスポンスを返す。
+  if (error instanceof AppHTTPException) {
+    logger.error('API Error handled in errorHandlerMiddleware', error, {
+      code: error.code,
+      message: error.message,
+    })
+    return c.json({ error: { code: error.code } }, 400)
   }
 
-  // その他のエラーの場合は 500 エラーを返す。
-  logger.error(`Unexpected error: ${err.message}`, err)
-  return c.json(
-    {
-      error: {
-        code: 'internal.server.error.1',
-      },
-    },
-    500,
-  )
+  // その他のエラーは 500 レスポンスを返す。
+  logger.error('Unexpected error handled in errorHandlerMiddleware', error, {
+    message: error.message,
+  })
+  return c.json({ error: { message: 'Internal Server Error' } }, 500)
 }

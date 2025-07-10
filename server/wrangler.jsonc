@@ -1,25 +1,49 @@
 {
-  // 共通設定
-  "name": "architecture-sample-app-server",
+  // 共通設定。
+  "name": "architecture-sample-app",
   "compatibility_date": "2024-09-23",
   "main": "src/index.ts",
   "compatibility_flags": ["nodejs_compat"],
+  "account_id": "4f29a10957e4205c8c867e6b0f4fc924",
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
   },
-  // 環境変数
-  "vars": {
-    "ENV_TYPE": "production",
-    "FIREBASE_PROJECT_ID": "architecture-sample-app"
-  },
-  // D1 データベースの設定
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "architecture-sample-app-server",
-      "database_id": "local-db-id",
-      "migrations_dir": "drizzle/migrations"
+  "env": {
+    "dev": {
+      // 開発環境の名前。
+      "name": "architecture-sample-app-dev",
+      // 開発環境の環境変数一覧。
+      "vars": {
+        "ENV_TYPE": "development",
+        "FIREBASE_PROJECT_ID": "architecture-sample-app-dev"
+      },
+      // D1 の設定（開発環境）。
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "architecture-sample-app-dev",
+          "database_id": "c170714c-a73c-40d9-9564-db5f507fccee",
+          "migrations_dir": "drizzle/migrations"
+        }
+      ]
+    },
+    "prod": {
+      "name": "architecture-sample-app",
+      // 本番環境の環境変数一覧。
+      "vars": {
+        "ENV_TYPE": "production",
+        "FIREBASE_PROJECT_ID": "architecture-sample-app"
+      },
+      // D1 の設定（本番環境）。
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "architecture-sample-app",
+          "database_id": "6143de06-800d-4e5f-a117-1ffd114ddc1d",
+          "migrations_dir": "drizzle/migrations"
+        }
+      ]
     }
-  ]
+  }
 }

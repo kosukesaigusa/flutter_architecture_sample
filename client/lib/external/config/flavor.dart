@@ -8,8 +8,10 @@ enum Flavor {
 
   /// サーバとの通信時に用いられるベース URL.
   String get serverBaseUrl => switch (this) {
-    Flavor.develop => 'https://dev.example.com',
-    Flavor.production => 'https://example.com',
+    Flavor.develop =>
+      'https://architecture-sample-app-dev.saigusa758cloudy.workers.dev',
+    Flavor.production =>
+      'https://architecture-sample-app.saigusa758cloudy.workers.dev',
   };
 
   /// 開発環境（本番環境でない）かどうか。
