@@ -42,5 +42,3 @@ linter:
     use_setters_to_change_properties: false
     document_ignores: false
     specify_nonobvious_local_variable_types: false
-    public_member_api_docs: false
-    lines_longer_than_80_chars: false
