@@ -1,0 +1,327 @@
+---
+description: handler のテストの実装
+globs: server/src/endpoint/handler/**/*Handler.test.ts
+alwaysApply: false
+---
+# Handler テスト実装ガイド
+
+このファイルを参照したら「✅Handler のテストの実装ルールを確認しました」と返答します。
+
+## 1. テストの実行方法
+
+```sh
+bun run test:ci
+```
+
+で watch せずに一度だけ実行します。
+
+## 2. テストの基本構造
+
+Handler のテストは `src/endpoint/handler/**/*Handler.test.ts` に実装します。各テストケースは以下の 3 つのステップで構成し、それぞれにコメントを記述します:
+
+### 2.1 Arrange（準備）
+
+- テストデータの準備
+- モックの設定
+- テストクライアントの作成
+
+```typescript
+// ユーザー情報をセットする。
+mockSetUserAuthMiddleware({ userId: 'test-user-id' })
+
+// テスト用の API クライアントを作成する。
+const client = await getTestClient()
+```
+
+### 2.2 Act（実行）
+
+- API リクエストの実行
+
+```typescript
+// Todo を作成する。
+const res = await client.api.todos.$post({
+  json: {
+    title: 'テストタスク',
+    description: 'テスト用のタスクです',
+  },
+})
+```
+
+### 2.3 Assert（検証）
+
+- ステータスコードの検証
+- レスポンスデータの検証
+- データベース状態の検証
+
+```typescript
+// ステータスコードを検証する。
+expect(res.status).toBe(200)
+
+// レスポンスデータを検証する。
+const data = await res.json()
+expect(data).toStrictEqual({
+  id: expect.any(String),
+  title: 'テストタスク',
+  description: 'テスト用のタスクです',
+  createdAt: expect.any(String),
+  updatedAt: expect.any(String),
+})
+```
+
+## 3. テストファイルの基本構成
+
+```typescript
+import { eq } from 'drizzle-orm'
+import { describe, expect, it } from 'vitest'
+import { todos } from '../../../schema'
+import { mockSetUserAuthMiddleware } from '../../../util/test-util/mockSetUserAuthMiddleware'
+import {
+  getTestClient,
+  getTestDrizzleClient,
+} from '../../../util/test-util/testClient'
+
+describe('Test for POST /api/todos', () => {
+  // 前提：認証済みユーザーが有効なデータで Todo を作成する。
+  // 期待値：ステータスコード 200 と作成された Todo データが返される。
+  it('Successfully create todo', async () => {
+    // ユーザー情報をセットする。
+    mockSetUserAuthMiddleware({ userId: 'test-user-id' })
+
+    // テスト用の API クライアントを作成する。
+    const client = await getTestClient()
+
+    // Todo を作成する。
+    const res = await client.api.todos.$post({
+      json: {
+        title: 'テストタスク',
+        description: 'テスト用のタスクです',
+      },
+    })
+
+    // ステータスコードを検証する。
+    expect(res.status).toBe(200)
+
+    // レスポンスデータを検証する。
+    const data = await res.json()
+    expect(data).toStrictEqual({
+      id: expect.any(String),
+      title: 'テストタスク',
+      description: 'テスト用のタスクです',
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String),
+    })
+
+    // DB の状態を検証する。
+    const db = getTestDrizzleClient()
+    const todoRecords = await db
+      .select()
+      .from(todos)
+      .where(eq(todos.userId, 'test-user-id'))
+      .all()
+
+    // 新しく作成された Todo が存在することを確認する。
+    expect(todoRecords.length).toBeGreaterThan(0)
+    const newTodo = todoRecords[todoRecords.length - 1]
+    expect(newTodo.title).toBe('テストタスク')
+    expect(newTodo.description).toBe('テスト用のタスクです')
+    expect(newTodo.userId).toBe('test-user-id')
+  })
+
+  // 前提：必須フィールドが不足している場合。
+  // 期待値：ステータスコード 400 とエラーコードが返される。
+  it('Returns 400 when required field is missing', async () => {
+    // ユーザー情報をセットする。
+    mockSetUserAuthMiddleware({ userId: 'test-user-id' })
+
+    // テスト用の API クライアントを作成する。
+    const client = await getTestClient()
+
+    // 必須フィールドが不足した Todo を作成する。
+    const res = await client.api.todos.$post({
+      json: {
+        title: '',  // 空文字
+        description: 'テスト用のタスクです',
+      },
+    })
+
+    // ステータスコードを検証する。
+    expect(res.status).toBe(400)
+
+    // エラーレスポンスを検証する。
+    const error = await res.json()
+    expect(error).toEqual({
+      error: {
+        code: expect.any(String),
+      },
+    })
+  })
+})
+```
+
+## 4. Todo アプリ特有のテストパターン
+
+### 4.1 GET /api/todos のテスト
+
+```typescript
+describe('Test for GET /api/todos', () => {
+  // 前提：認証済みユーザーが Todo 一覧を取得する。
+  // 期待値：ステータスコード 200 とユーザーの Todo 一覧が返される。
+  it('Successfully get todos for authenticated user', async () => {
+    // ユーザー情報をセットする。
+    mockSetUserAuthMiddleware({ userId: 'test-user-id' })
+
+    // 事前にテストデータを作成する。
+    const db = getTestDrizzleClient()
+    await db.insert(todos).values([
+      {
+        id: 'todo-1',
+        title: 'テストタスク1',
+        description: 'テスト用のタスク1です',
+        userId: 'test-user-id',
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      },
+      {
+        id: 'todo-2',
+        title: 'テストタスク2',
+        description: 'テスト用のタスク2です',
+        userId: 'test-user-id',
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      },
+      {
+        id: 'todo-3',
+        title: '他ユーザーのタスク',
+        description: '他のユーザーのタスクです',
+        userId: 'other-user-id',
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      },
+    ])
+
+    // テスト用の API クライアントを作成する。
+    const client = await getTestClient()
+
+    // Todo 一覧を取得する。
+    const res = await client.api.todos.$get()
+
+    // ステータスコードを検証する。
+    expect(res.status).toBe(200)
+
+    // レスポンスデータを検証する。
+    const data = await res.json()
+    expect(data.todos).toHaveLength(2)  // 自分の Todo のみ
+    expect(data.todos[0]).toStrictEqual({
+      id: 'todo-1',
+      title: 'テストタスク1',
+      description: 'テスト用のタスク1です',
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String),
+    })
+    expect(data.todos[1]).toStrictEqual({
+      id: 'todo-2',
+      title: 'テストタスク2',
+      description: 'テスト用のタスク2です',
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String),
+    })
+  })
+
+  // 前提：認証済みユーザーが Todo を持っていない場合。
+  // 期待値：ステータスコード 200 と空の配列が返される。
+  it('Returns empty array when user has no todos', async () => {
+    // ユーザー情報をセットする。
+    mockSetUserAuthMiddleware({ userId: 'new-user-id' })
+
+    // テスト用の API クライアントを作成する。
+    const client = await getTestClient()
+
+    // Todo 一覧を取得する。
+    const res = await client.api.todos.$get()
+
+    // ステータスコードを検証する。
+    expect(res.status).toBe(200)
+
+    // レスポンスデータを検証する。
+    const data = await res.json()
+    expect(data.todos).toStrictEqual([])
+  })
+})
+```
+
+## 5. テストの基本方針
+
+### 5.1 テストの範囲
+
+- **UseCase はモックしない**: 実際のビジネスロジックを通してテストする
+- **外部依存のみモック**: 現在の Todo アプリでは外部依存は Firebase Auth のみ
+- **DB の状態も検証**: テスト後にデータベースの状態を確認して、期待通りのデータが保存されているかを検証する
+- **エンドツーエンドテスト**: リクエストからレスポンスまでの一連の流れをテストする
+
+### 5.2 認証のモック
+
+Todo アプリでは Firebase Auth による認証が必要なため、以下のパターンでモックします：
+
+```typescript
+import { mockSetUserAuthMiddleware } from '../../../util/test-util/mockSetUserAuthMiddleware'
+
+// テスト実行前に認証ユーザーを設定する。
+mockSetUserAuthMiddleware({ userId: 'test-user-id' })
+```
+
+### 5.3 データベーステスト
+
+各テストではデータベースの状態も検証します：
+
+```typescript
+// DB の状態を検証する。
+const db = getTestDrizzleClient()
+const todoRecords = await db
+  .select()
+  .from(todos)
+  .where(eq(todos.userId, 'test-user-id'))
+  .all()
+
+// 期待する状態を確認する。
+expect(todoRecords.length).toBe(1)
+expect(todoRecords[0].title).toBe('テストタスク')
+```
+
+## 6. テストケースのパターン
+
+### 6.1 正常系テスト
+
+- 適切なデータでの操作成功
+- レスポンス形式の検証
+- データベース状態の検証
+
+### 6.2 異常系テスト
+
+- バリデーションエラー
+- 認証エラー（未実装の場合は将来対応）
+- データベースエラー
+
+### 6.3 境界値テスト
+
+- 文字列長の上限・下限
+- 空文字列・null 値の処理
+
+## 7. テストファイルの命名規則
+
+- ファイル名: `{HandlerName}.test.ts`
+- 例: `getTodosHandler.test.ts`, `createTodoHandler.test.ts`
+
+## 8. テスト実装チェックリスト
+
+Handler のテスト実装時は以下の点を確認してください：
+
+- [ ] 認証ユーザーの設定が実装されているか
+- [ ] 正常系のテストケースが実装されているか
+- [ ] 異常系のテストケースが実装されているか
+- [ ] ステータスコードが適切に検証されているか
+- [ ] レスポンスデータが適切に検証されているか
+- [ ] データベースの状態が検証されているか
+- [ ] ユーザー分離が正しく機能することが検証されているか
+- [ ] エラーレスポンスの形式が検証されているか
+- [ ] テストケースごとに適切なテストデータを使用しているか
+- [ ] Flutter クライアントの期待する形式で検証されているか
