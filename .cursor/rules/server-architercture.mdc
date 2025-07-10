@@ -1,0 +1,9 @@
+---
+description: 全体のアーキテクチャ
+globs: server/src/**/*.ts
+alwaysApply: false
+redirect: docs/rules/server/architecture.md
+---
+# ルールの内容
+
+ルールの内容は [docs/rules/server/architecture.md](../../docs/rules/server/architecture.md) に従います。

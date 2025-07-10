@@ -1,23 +1,18 @@
----
-description: 全体のアーキテクチャ
-globs: server/src/**/*.ts
-alwaysApply: false
----
 # プロジェクトアーキテクチャ
 
 このファイルを参照したら「✅アーキテクチャルールを確認しました」と返答します。
 
 ## 1. 基本構成
 
-- **スキーマ定義**: [schema.ts](../../src/schema.ts) がデータベーススキーマを定義しています。
-- **テスト設定**: [vitest.config.ts](mdc:vitest.config.ts) に従って [setupDb.ts](../../src/util/test-util/db/setupDb.ts) で vitest によるテスト時のサーバを設定します。
-- **テストデータ**: [seed.ts](../../src/util/test-util/db/seed.ts) でテスト時のシードデータを提供します。
+- **スキーマ定義**: [schema.ts](../../../server/src/schema.ts) がデータベーススキーマを定義しています。
+- **テスト設定**: [vitest.config.ts](../../../server/vitest.config.ts) に従って [setupDb.ts](../../../server/src/util/test-util/db/setupDb.ts) で vitest によるテスト時のサーバを設定します。
+- **テストデータ**: [seed.ts](../../../server/src/util/test-util/db/seed.ts) でテスト時のシードデータを提供します。
 
 ## 2. エントリポイントと環境設定
 
-- **メインエントリポイント**: [index.ts](../../src/index.ts) に hono のアプリの定義とエンドポイントのパス一覧を定義します。
-- **アプリケーション生成**: [factory.ts](../../src/util/factory.ts) で hono インスタンスを生成します。
-- **環境変数**: [env.ts](../../src/env.ts) に環境変数一覧を定義します。
+- **メインエントリポイント**: [index.ts](../../../server/src/index.ts) に hono のアプリの定義とエンドポイントのパス一覧を定義します。
+- **アプリケーション生成**: [factory.ts](../../../server/src/util/factory.ts) で hono インスタンスを生成します。
+- **環境変数**: [env.ts](../../../server/src/env.ts) に環境変数一覧を定義します。
 
 エンドポイントのパス定義から `src/endpoint/handler` フォルダ配下の処理に委譲します。
 
@@ -69,25 +64,25 @@ alwaysApply: false
 ## 5. その他の構成要素
 
 - **ユーティリティ**: その他の汎用的な処理等は `src/util` に記述します。
-- **テストクライアント**: テストの実装に際して [testClient.ts](../../src/util/test-util/testClient.ts) を変更することはありません。
+- **テストクライアント**: テストの実装に際して [testClient.ts](../../../server/src/util/test-util/testClient.ts) を変更することはありません。
 - **エラーハンドリング**: アプリケーション全体で統一されたエラー処理を行います。
 - **ロギング**: 適切なレベルでのログ出力を行います。
 
 ## 6. アーキテクチャ図
 
-```
+```txt
 ┌─────────────────┐
 │     index.ts    │ ← エントリポイント (Hono)
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│     Handler     │ ← API リクエスト/レスポンス処理
+│   Middleware    │ ← 認証・認可、共通処理
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│   Middleware    │ ← 認証・認可、共通処理
+│     Handler     │ ← API リクエスト/レスポンス処理
 └────────┬────────┘
          │
          ▼
