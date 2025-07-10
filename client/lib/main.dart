@@ -17,8 +17,8 @@ Future<void> main() async {
 
   // 環境に応じた Firebase SDK を初期化する。
   final firebaseApp = switch (flavor) {
-    Flavor.develop => await initializeDevelopFirebase(),
-    Flavor.production => await initializeProductionFirebase(),
+    Flavor.dev => await initializeDevFirebase(),
+    Flavor.prod => await initializeProdFirebase(),
   };
   logger.d('Initialized FirebaseApp: ${firebaseApp.options.projectId}');
 

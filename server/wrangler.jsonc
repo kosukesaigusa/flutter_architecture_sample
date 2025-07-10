@@ -15,7 +15,7 @@
       "name": "architecture-sample-app-dev",
       // 開発環境の環境変数一覧。
       "vars": {
-        "ENV_TYPE": "development",
+        "ENV_TYPE": "dev",
         "FIREBASE_PROJECT_ID": "architecture-sample-app-dev"
       },
       // D1 の設定（開発環境）。
@@ -32,7 +32,7 @@
       "name": "architecture-sample-app",
       // 本番環境の環境変数一覧。
       "vars": {
-        "ENV_TYPE": "production",
+        "ENV_TYPE": "prod",
         "FIREBASE_PROJECT_ID": "architecture-sample-app"
       },
       // D1 の設定（本番環境）。

@@ -80,7 +80,6 @@ export const createFooHandlers =
     describeRoute({
       tags: ['foo'],
       summary: 'Foo リソースを作成する',
-      description: ENDPOINT_DEVELOPMENT_STATUS.IMPLEMENTED.displayText,
       responses: {
         200: {
           description: 'Foo リソースの作成に成功',
@@ -199,7 +198,6 @@ export const getFoosHandlers =
     describeRoute({
       tags: ['foo'],
       summary: 'Foo リソース一覧を取得する',
-      description: ENDPOINT_DEVELOPMENT_STATUS.IMPLEMENTED.displayText,
       responses: {
         200: {
           description: 'Foo リソース一覧の取得に成功',
@@ -318,7 +316,6 @@ export const createFooHandlers =
     describeRoute({
       tags: ['foo'],
       summary: 'Foo リソースを作成する',
-      description: ENDPOINT_DEVELOPMENT_STATUS.IMPLEMENTED.displayText,
       responses: {
         200: {
           description: 'Foo リソースの作成に成功',
