@@ -17,7 +17,7 @@ export class AppLogger {
   } as const
 
   // 区切り線。
-  private static readonly SEPARATOR_LINE = '─'.repeat(100)
+  private static readonly SEPARATOR_LINE = '─'.repeat(10)
 
   /**
    * AppLogger のコンストラクタ。

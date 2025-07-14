@@ -16,7 +16,8 @@
       // 開発環境の環境変数一覧。
       "vars": {
         "ENV_TYPE": "dev",
-        "FIREBASE_PROJECT_ID": "architecture-sample-app-dev"
+        "FIREBASE_PROJECT_ID": "architecture-sample-app-dev",
+        "PUBLIC_JWK_CACHE_KEY": "firebase-jwt-cache"
       },
       // D1 の設定（開発環境）。
       "d1_databases": [
@@ -26,6 +27,13 @@
           "database_id": "c170714c-a73c-40d9-9564-db5f507fccee",
           "migrations_dir": "drizzle/migrations"
         }
+      ],
+      // KV の設定（開発環境）。
+      "kv_namespaces": [
+        {
+          "binding": "PUBLIC_JWK_CACHE_KV",
+          "id": "35cc34b6f92b4775afed04de48351c9c"
+        }
       ]
     },
     "prod": {
@@ -33,7 +41,8 @@
       // 本番環境の環境変数一覧。
       "vars": {
         "ENV_TYPE": "prod",
-        "FIREBASE_PROJECT_ID": "architecture-sample-app"
+        "FIREBASE_PROJECT_ID": "architecture-sample-app",
+        "PUBLIC_JWK_CACHE_KEY": "firebase-jwt-cache"
       },
       // D1 の設定（本番環境）。
       "d1_databases": [
@@ -42,6 +51,13 @@
           "database_name": "architecture-sample-app",
           "database_id": "6143de06-800d-4e5f-a117-1ffd114ddc1d",
           "migrations_dir": "drizzle/migrations"
+        }
+      ],
+      // KV の設定（本番環境）。
+      "kv_namespaces": [
+        {
+          "binding": "PUBLIC_JWK_CACHE_KV",
+          "id": "73094c6000ad43519cbfebccb36abee0"
         }
       ]
     }

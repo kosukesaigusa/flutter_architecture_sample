@@ -20,6 +20,8 @@ export const setUserAuthMiddleware: MiddlewareHandler = async (c, next) => {
     projectId: c.env.FIREBASE_PROJECT_ID,
   }
 
+  logger.info(`Using Firebase project ID: ${c.env.FIREBASE_PROJECT_ID}`)
+
   try {
     // Firebase Auth の認証を行う。
     const verifyMiddleware = verifyFirebaseAuth(config)
