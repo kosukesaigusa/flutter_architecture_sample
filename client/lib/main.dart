@@ -6,6 +6,8 @@ import 'external/firebase/firebase.dart';
 import 'external/http/extract_http_request_headers.dart';
 import 'external/http/http_client.dart';
 import 'external/package_info/package_info.dart';
+import 'model/logic/feature/auth/fetch_id_token.dart';
+import 'ui/page/top/top_page.dart';
 import 'util/logger.dart';
 
 Future<void> main() async {
@@ -35,9 +37,7 @@ Future<void> main() async {
     overrides: [
       extractHttpRequestHeadersProvider.overrideWith(
         (ref) => () async {
-          // TODO: 実際の ID トークンを取得する。
-          // final idToken = await ref.read(fetchIdTokenUseCaseProvider).invoke();
-          const idToken = 'dummy-id-token';
+          final idToken = await ref.read(fetchIdTokenUseCaseProvider).invoke();
           logger.d('idToken: $idToken');
           return {'Authorization': 'Bearer $idToken'};
         },
@@ -60,8 +60,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
-    );
+    return const MaterialApp(home: TopPage());
   }
 }

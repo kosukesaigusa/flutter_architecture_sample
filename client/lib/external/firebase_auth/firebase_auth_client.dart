@@ -23,8 +23,8 @@ class FirebaseAuthClient {
   /// 現在のユーザー情報を取得する。
   ///
   /// サインイン済みの場合に、非 null な値を返す。
-  FirebaseAuthUser? fetchCurrentUser() {
-    final user = _firebaseAuth.currentUser;
+  Future<FirebaseAuthUser?> fetchCurrentUser() async {
+    final user = await FirebaseAuth.instance.authStateChanges().first;
     if (user == null) {
       return null;
     }
@@ -36,7 +36,13 @@ class FirebaseAuthClient {
   }
 
   /// IdToken を取得する。
-  Future<String?> getIdToken() async => _firebaseAuth.currentUser?.getIdToken();
+  Future<String?> getIdToken() async {
+    final user = await FirebaseAuth.instance.authStateChanges().first;
+    if (user == null) {
+      return null;
+    }
+    return user.getIdToken();
+  }
 
   /// メールアドレスとパスワードを用いてサインインする。
   ///

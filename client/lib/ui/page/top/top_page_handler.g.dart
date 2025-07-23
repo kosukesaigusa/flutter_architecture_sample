@@ -1,29 +1,29 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'todos_page_view_model.dart';
+part of 'top_page_handler.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$todosPageViewModelHash() =>
-    r'cf8fb0126a45a1305f929e7263a527a34ab6efd1';
+String _$topPageHandlerHash() => r'2edaa408dc79313e3963c2983235dffa4e3a8ffb';
 
-/// TodosPage の ViewModel.
+/// [TopPageHandler] クラスのインスタンスを提供する。
 ///
-/// Copied from [TodosPageViewModel].
-@ProviderFor(TodosPageViewModel)
-final todosPageViewModelProvider = AutoDisposeAsyncNotifierProvider<
-    TodosPageViewModel, TodosPageState>.internal(
-  TodosPageViewModel.new,
-  name: r'todosPageViewModelProvider',
+/// Copied from [topPageHandler].
+@ProviderFor(topPageHandler)
+final topPageHandlerProvider = AutoDisposeProvider<TopPageHandler>.internal(
+  topPageHandler,
+  name: r'topPageHandlerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$todosPageViewModelHash,
+      : _$topPageHandlerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TodosPageViewModel = AutoDisposeAsyncNotifier<TodosPageState>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TopPageHandlerRef = AutoDisposeProviderRef<TopPageHandler>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

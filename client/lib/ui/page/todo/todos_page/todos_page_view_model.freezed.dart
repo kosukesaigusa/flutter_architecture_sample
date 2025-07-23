@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$TodosPageState {
+  bool get isSignedIn => throw _privateConstructorUsedError;
   List<Todo> get todos => throw _privateConstructorUsedError;
 
   /// Create a copy of TodosPageState
@@ -31,7 +32,7 @@ abstract class $TodosPageStateCopyWith<$Res> {
           TodosPageState value, $Res Function(TodosPageState) then) =
       _$TodosPageStateCopyWithImpl<$Res, TodosPageState>;
   @useResult
-  $Res call({List<Todo> todos});
+  $Res call({bool isSignedIn, List<Todo> todos});
 }
 
 /// @nodoc
@@ -49,9 +50,14 @@ class _$TodosPageStateCopyWithImpl<$Res, $Val extends TodosPageState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? isSignedIn = null,
     Object? todos = null,
   }) {
     return _then(_value.copyWith(
+      isSignedIn: null == isSignedIn
+          ? _value.isSignedIn
+          : isSignedIn // ignore: cast_nullable_to_non_nullable
+              as bool,
       todos: null == todos
           ? _value.todos
           : todos // ignore: cast_nullable_to_non_nullable
@@ -68,7 +74,7 @@ abstract class _$$TodosPageStateImplCopyWith<$Res>
       __$$TodosPageStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Todo> todos});
+  $Res call({bool isSignedIn, List<Todo> todos});
 }
 
 /// @nodoc
@@ -84,9 +90,14 @@ class __$$TodosPageStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? isSignedIn = null,
     Object? todos = null,
   }) {
     return _then(_$TodosPageStateImpl(
+      isSignedIn: null == isSignedIn
+          ? _value.isSignedIn
+          : isSignedIn // ignore: cast_nullable_to_non_nullable
+              as bool,
       todos: null == todos
           ? _value._todos
           : todos // ignore: cast_nullable_to_non_nullable
@@ -98,9 +109,12 @@ class __$$TodosPageStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$TodosPageStateImpl implements _TodosPageState {
-  const _$TodosPageStateImpl({required final List<Todo> todos})
+  const _$TodosPageStateImpl(
+      {required this.isSignedIn, required final List<Todo> todos})
       : _todos = todos;
 
+  @override
+  final bool isSignedIn;
   final List<Todo> _todos;
   @override
   List<Todo> get todos {
@@ -111,7 +125,7 @@ class _$TodosPageStateImpl implements _TodosPageState {
 
   @override
   String toString() {
-    return 'TodosPageState(todos: $todos)';
+    return 'TodosPageState(isSignedIn: $isSignedIn, todos: $todos)';
   }
 
   @override
@@ -119,12 +133,14 @@ class _$TodosPageStateImpl implements _TodosPageState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TodosPageStateImpl &&
+            (identical(other.isSignedIn, isSignedIn) ||
+                other.isSignedIn == isSignedIn) &&
             const DeepCollectionEquality().equals(other._todos, _todos));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_todos));
+  int get hashCode => Object.hash(
+      runtimeType, isSignedIn, const DeepCollectionEquality().hash(_todos));
 
   /// Create a copy of TodosPageState
   /// with the given fields replaced by the non-null parameter values.
@@ -137,9 +153,12 @@ class _$TodosPageStateImpl implements _TodosPageState {
 }
 
 abstract class _TodosPageState implements TodosPageState {
-  const factory _TodosPageState({required final List<Todo> todos}) =
-      _$TodosPageStateImpl;
+  const factory _TodosPageState(
+      {required final bool isSignedIn,
+      required final List<Todo> todos}) = _$TodosPageStateImpl;
 
+  @override
+  bool get isSignedIn;
   @override
   List<Todo> get todos;
 
